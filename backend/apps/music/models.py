@@ -13,3 +13,19 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Track(models.Model):
+    project = models.ForeignKey(
+        Project, on_delete=models.CASCADE, related_name="tracks"
+    )
+    name = models.CharField(max_length=200, default="Track")
+    note_events = models.JSONField(default=list)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.name} ({self.project.name})"
