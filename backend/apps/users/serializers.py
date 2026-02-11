@@ -9,7 +9,9 @@ def validate_username(value):
         raise serializers.ValidationError(
             "Username can only contain letters, numbers, underscores, and hyphens. No spaces or special characters allowed."
         )
-    return value
+    if User.objects.filter(username__iexact=value).exists():
+        raise serializers.ValidationError("A user with this username already exists.")
+    return value.lower()
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

@@ -4,6 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from .serializers import UserRegistrationSerializer
 
 
@@ -30,7 +31,13 @@ def login_view(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    user = authenticate(username=username, password=password)
+    username_lower = username.lower()
+
+    try:
+        user_obj = User.objects.get(username__iexact=username_lower)
+        user = authenticate(username=user_obj.username, password=password)
+    except User.DoesNotExist:
+        user = None
 
     if user is None:
         return Response(

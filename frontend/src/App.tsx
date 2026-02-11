@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { useAuth } from "./hooks/useAuth";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+const ProjectList = () => (
+  <div className="container mx-auto p-4">
+    <h1 className="text-2xl font-bold">Projects</h1>
+    <p className="mt-4">Project list will be implemented in Part 5.</p>
+  </div>
+);
+
+const ProjectDetail = () => (
+  <div className="container mx-auto p-4">
+    <h1 className="text-2xl font-bold">Project Detail</h1>
+    <p className="mt-4">Project detail will be implemented in Part 5.</p>
+  </div>
+);
+
+const HomeRedirect = () => {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    );
+  }
+
+  return <Navigate to={isAuthenticated ? "/projects" : "/login"} replace />;
+};
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomeRedirect />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route
+            path="/projects"
+            element={
+              <ProtectedRoute>
+                <ProjectList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects/:id"
+            element={
+              <ProtectedRoute>
+                <ProjectDetail />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
