@@ -4,16 +4,22 @@ export interface Project {
   id: number;
   name: string;
   user: number;
+  bpm: number;
+  key: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface CreateProjectData {
   name: string;
+  bpm?: number;
+  key?: string;
 }
 
 export interface UpdateProjectData {
   name: string;
+  bpm?: number;
+  key?: string;
 }
 
 export const getProjects = async (): Promise<Project[]> => {

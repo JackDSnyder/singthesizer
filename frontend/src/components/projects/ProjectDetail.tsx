@@ -86,18 +86,21 @@ const ProjectDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg"></span>
+        <span className="loading loading-spinner loading-lg text-synthwave-purple"></span>
       </div>
     );
   }
 
   if (error && !project) {
     return (
-      <div className="container mx-auto p-4 max-w-4xl">
-        <div className="alert alert-error mb-4">
-          <span>{error}</span>
+      <div className="container mx-auto p-4 max-w-6xl min-h-screen">
+        <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
+          <span className="neon-glow-orange">{error}</span>
         </div>
-        <Link to="/projects" className="btn btn-ghost">
+        <Link
+          to="/projects"
+          className="btn bg-synthwave-purple hover:bg-synthwave-purple/80 border-synthwave-purple text-white neon-border-purple rounded-lg py-2 px-4"
+        >
           ← Back to Projects
         </Link>
       </div>
@@ -109,21 +112,24 @@ const ProjectDetail = () => {
   }
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
+    <div className="container mx-auto p-4 max-w-6xl min-h-screen">
       <div className="mb-4">
-        <Link to="/projects" className="btn btn-ghost btn-sm">
+        <Link
+          to="/projects"
+          className="btn btn-sm bg-synthwave-blue hover:bg-synthwave-blue/80 border-synthwave-blue text-white neon-border-blue rounded-lg py-2 px-4"
+        >
           ← Back to Projects
         </Link>
       </div>
 
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
+      <div className="card synthwave-card shadow-2xl">
+        <div className="card-body p-6">
           {isEditing ? (
             <>
-              <h2 className="card-title mb-4">Edit Project</h2>
+              <h2 className="card-title mb-4 synthwave-gradient-text">Edit Project</h2>
               <ProjectForm
                 key={`edit-${project.id}-${isEditing}`}
-                initialData={{ name: project.name }}
+                initialData={{ name: project.name, bpm: project.bpm, key: project.key }}
                 onSubmit={handleUpdate}
                 onCancel={() => setIsEditing(false)}
                 submitLabel="Save"
@@ -133,16 +139,16 @@ const ProjectDetail = () => {
           ) : (
             <>
               <div className="flex justify-between items-start mb-4">
-                <h2 className="card-title text-3xl">{project.name}</h2>
+                <h2 className="card-title text-3xl synthwave-gradient-text neon-glow-purple">{project.name}</h2>
                 <div className="flex gap-2">
                   <button
-                    className="btn btn-sm btn-primary"
+                    className="btn btn-sm bg-synthwave-purple hover:bg-synthwave-purple/80 border-synthwave-purple text-white neon-border-purple rounded-lg py-2 px-4"
                     onClick={() => setIsEditing(true)}
                   >
                     Edit
                   </button>
                   <button
-                    className="btn btn-sm btn-error"
+                    className="btn btn-sm bg-red-900/50 hover:bg-red-900/70 border-red-500/50 text-red-200 rounded-lg py-2 px-4"
                     onClick={() => setShowDeleteModal(true)}
                   >
                     Delete
@@ -150,22 +156,28 @@ const ProjectDetail = () => {
                 </div>
               </div>
 
-              <div className="divider"></div>
+              <div className="divider border-synthwave-purple/30"></div>
 
               <div className="space-y-2">
-                <p className="text-sm text-base-content/70">
-                  <span className="font-semibold">Created:</span> {formatDate(project.created_at)}
+                <p className="text-sm text-synthwave-text-secondary">
+                  <span className="font-semibold text-synthwave-text-primary">BPM:</span> {project.bpm}
                 </p>
-                <p className="text-sm text-base-content/70">
-                  <span className="font-semibold">Last Updated:</span> {formatDate(project.updated_at)}
+                <p className="text-sm text-synthwave-text-secondary">
+                  <span className="font-semibold text-synthwave-text-primary">Key:</span> {project.key}
+                </p>
+                <p className="text-sm text-synthwave-text-secondary">
+                  <span className="font-semibold text-synthwave-text-primary">Created:</span> {formatDate(project.created_at)}
+                </p>
+                <p className="text-sm text-synthwave-text-secondary">
+                  <span className="font-semibold text-synthwave-text-primary">Last Updated:</span> {formatDate(project.updated_at)}
                 </p>
               </div>
 
-              <div className="divider"></div>
+              <div className="divider border-synthwave-purple/30"></div>
 
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Tracks</h3>
-                <p className="text-base-content/70">
+              <div className="mt-6">
+                <h3 className="text-xl font-semibold mb-4 synthwave-gradient-text">Tracks</h3>
+                <p className="text-synthwave-text-secondary">
                   Track management will be implemented in Phase 2.
                 </p>
               </div>
@@ -177,21 +189,21 @@ const ProjectDetail = () => {
       {/* Delete Confirmation Modal */}
       {showDeleteModal && (
         <div className="modal modal-open">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg mb-4">Delete Project</h3>
-            <p className="mb-4">
+          <div className="modal-box synthwave-card border border-red-500/50 p-6 max-w-md">
+            <h3 className="font-bold text-2xl mb-4 text-red-200">Delete Project</h3>
+            <p className="mb-6 text-synthwave-text-secondary">
               Are you sure you want to delete &quot;{project.name}&quot;? This action cannot be undone.
             </p>
-            <div className="modal-action">
+            <div className="flex justify-end gap-4 mt-6">
               <button
-                className="btn btn-ghost"
+                className="btn bg-synthwave-purple hover:bg-synthwave-purple/80 border-synthwave-purple text-white neon-border-purple rounded-lg py-2.5 px-6"
                 onClick={() => setShowDeleteModal(false)}
                 disabled={deleteLoading}
               >
                 Cancel
               </button>
               <button
-                className="btn btn-error"
+                className="btn bg-red-900/50 hover:bg-red-900/70 border-red-500/50 text-red-200 rounded-lg py-2.5 px-6"
                 onClick={handleDelete}
                 disabled={deleteLoading}
               >
@@ -203,7 +215,7 @@ const ProjectDetail = () => {
               </button>
             </div>
           </div>
-          <div className="modal-backdrop" onClick={() => setShowDeleteModal(false)}></div>
+          <div className="modal-backdrop bg-black/70" onClick={() => setShowDeleteModal(false)}></div>
         </div>
       )}
     </div>

@@ -60,26 +60,28 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-base-200">
-      <div className="card w-full max-w-md bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h2 className="card-title justify-center text-2xl mb-4">Register</h2>
+    <div className="h-[calc(100vh-80px)] flex items-center justify-center synthwave-gradient overflow-hidden">
+      <div className="card w-full max-w-md synthwave-card shadow-2xl">
+        <div className="card-body p-8">
+          <h2 className="card-title justify-center text-3xl mb-6 synthwave-gradient-text neon-glow-purple">
+            Register
+          </h2>
 
           {error && (
-            <div className="alert alert-error">
-              <span>{error}</span>
+            <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
+              <span className="neon-glow-orange">{error}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
-            <div className="form-control w-full mb-4">
-              <label className="label">
-                <span className="label-text">Username</span>
+            <div className="form-control w-full mb-5">
+              <label className="label pb-2">
+                <span className="label-text text-synthwave-text-secondary">Username</span>
               </label>
               <input
                 type="text"
                 placeholder="Enter your username"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full bg-synthwave-card border-synthwave-purple/50 text-synthwave-text-primary synthwave-input-focus rounded-lg py-2.5 px-4"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
@@ -87,14 +89,14 @@ const Register = () => {
               />
             </div>
 
-            <div className="form-control w-full mb-4">
-              <label className="label">
-                <span className="label-text">Email</span>
+            <div className="form-control w-full mb-5">
+              <label className="label pb-2">
+                <span className="label-text text-synthwave-text-secondary">Email</span>
               </label>
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full bg-synthwave-card border-synthwave-purple/50 text-synthwave-text-primary synthwave-input-focus rounded-lg py-2.5 px-4"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -102,14 +104,14 @@ const Register = () => {
               />
             </div>
 
-            <div className="form-control w-full mb-4">
-              <label className="label">
-                <span className="label-text">Password</span>
+            <div className="form-control w-full mb-5">
+              <label className="label pb-2">
+                <span className="label-text text-synthwave-text-secondary">Password</span>
               </label>
               <input
                 type="password"
                 placeholder="Enter your password"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full bg-synthwave-card border-synthwave-purple/50 text-synthwave-text-primary synthwave-input-focus rounded-lg py-2.5 px-4"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -117,14 +119,14 @@ const Register = () => {
               />
             </div>
 
-            <div className="form-control w-full mb-4">
-              <label className="label">
-                <span className="label-text">Confirm Password</span>
+            <div className="form-control w-full mb-6">
+              <label className="label pb-2">
+                <span className="label-text text-synthwave-text-secondary">Confirm Password</span>
               </label>
               <input
                 type="password"
                 placeholder="Confirm your password"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full bg-synthwave-card border-synthwave-purple/50 text-synthwave-text-primary synthwave-input-focus rounded-lg py-2.5 px-4"
                 value={passwordConfirm}
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 required
@@ -133,16 +135,20 @@ const Register = () => {
             </div>
 
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary" disabled={loading}>
+              <button
+                type="submit"
+                className="btn bg-synthwave-blue hover:bg-synthwave-blue/80 border-synthwave-blue text-white neon-border-blue rounded-lg py-3 px-6 w-full"
+                disabled={loading}
+              >
                 {loading ? <span className="loading loading-spinner"></span> : "Register"}
               </button>
             </div>
           </form>
 
-          <div className="text-center mt-4">
-            <p className="text-sm">
+          <div className="text-center mt-6">
+            <p className="text-sm text-synthwave-text-secondary">
               Already have an account?{" "}
-              <Link to="/login" className="link link-primary">
+              <Link to="/login" className="text-synthwave-blue hover:text-synthwave-purple neon-glow-blue">
                 Login here
               </Link>
             </p>

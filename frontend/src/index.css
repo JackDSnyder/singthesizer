@@ -1,3 +1,99 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-synthwave-dark text-synthwave-text-primary;
+    background-image:
+      linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%),
+      repeating-linear-gradient(0deg,
+        transparent,
+        transparent 2px,
+        rgba(168, 85, 247, 0.03) 2px,
+        rgba(168, 85, 247, 0.03) 4px);
+    min-height: 100vh;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(168, 85, 247, 0.5) rgba(26, 26, 46, 0.3);
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: rgba(26, 26, 46, 0.3);
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.5);
+    border-radius: 4px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: rgba(168, 85, 247, 0.7);
+  }
+}
+
+@layer utilities {
+  .neon-glow-purple {
+    text-shadow: 0 0 6px rgba(168, 85, 247, 0.7), 0 0 12px rgba(168, 85, 247, 0.5);
+  }
+
+  .neon-glow-blue {
+    text-shadow: 0 0 6px rgba(59, 130, 246, 0.7), 0 0 12px rgba(59, 130, 246, 0.5);
+  }
+
+  .neon-glow-orange {
+    text-shadow: 0 0 6px rgba(249, 115, 22, 0.7), 0 0 12px rgba(249, 115, 22, 0.5);
+  }
+
+  .neon-glow-yellow {
+    text-shadow: 0 0 6px rgba(234, 179, 8, 0.7), 0 0 12px rgba(234, 179, 8, 0.5);
+  }
+
+  .neon-border-purple {
+    box-shadow: 0 0 6px rgba(168, 85, 247, 0.6), 0 0 12px rgba(168, 85, 247, 0.4), inset 0 0 6px rgba(168, 85, 247, 0.2);
+  }
+
+  .neon-border-blue {
+    box-shadow: 0 0 6px rgba(59, 130, 246, 0.6), 0 0 12px rgba(59, 130, 246, 0.4), inset 0 0 6px rgba(59, 130, 246, 0.2);
+  }
+
+  .neon-border-orange {
+    box-shadow: 0 0 6px rgba(249, 115, 22, 0.6), 0 0 12px rgba(249, 115, 22, 0.4), inset 0 0 6px rgba(249, 115, 22, 0.2);
+  }
+
+  .neon-border-yellow {
+    box-shadow: 0 0 6px rgba(234, 179, 8, 0.6), 0 0 12px rgba(234, 179, 8, 0.4), inset 0 0 6px rgba(234, 179, 8, 0.2);
+  }
+
+  .synthwave-gradient {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  }
+
+  .synthwave-gradient-text {
+    background: linear-gradient(135deg, #a855f7 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .synthwave-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+  }
+
+  .synthwave-input-focus {
+    @apply focus:border-synthwave-purple focus:outline-none focus:ring-2 focus:ring-synthwave-purple focus:ring-opacity-50;
+    transition: all 0.3s ease;
+  }
+
+  .synthwave-input-focus:focus {
+    box-shadow: 0 0 6px rgba(168, 85, 247, 0.5), 0 0 12px rgba(168, 85, 247, 0.3);
+  }
+}

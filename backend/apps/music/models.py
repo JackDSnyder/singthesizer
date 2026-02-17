@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 class Project(models.Model):
     name = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="projects")
+    bpm = models.IntegerField(default=120, help_text="Beats per minute")
+    key = models.CharField(max_length=10, default="C", help_text="Musical key (e.g., C, Dm, Am)")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
