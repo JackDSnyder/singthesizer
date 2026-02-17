@@ -121,16 +121,26 @@ const ProjectForm = ({
         <label className="label pb-2">
           <span className="label-text text-synthwave-text-secondary">Key</span>
         </label>
-        <input
-          type="text"
-          placeholder="C"
-          maxLength={10}
-          className="input input-bordered w-full bg-synthwave-card border-synthwave-purple/50 text-synthwave-text-primary synthwave-input-focus rounded-lg py-2.5 px-4"
+        <select
+          className="select select-bordered w-full bg-synthwave-card border-synthwave-purple/50 text-synthwave-text-primary synthwave-input-focus rounded-lg py-2.5 px-4"
           value={key}
           onChange={(e) => setKey(e.target.value)}
           required
           disabled={loading}
-        />
+        >
+          <option value="C">C</option>
+          <option value="C#">C#</option>
+          <option value="D">D</option>
+          <option value="D#">D#</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="F#">F#</option>
+          <option value="G">G</option>
+          <option value="G#">G#</option>
+          <option value="A">A</option>
+          <option value="A#">A#</option>
+          <option value="B">B</option>
+        </select>
       </div>
 
       <div className="flex gap-3 justify-end mt-6">
