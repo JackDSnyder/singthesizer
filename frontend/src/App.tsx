@@ -4,20 +4,8 @@ import { useAuth } from "./hooks/useAuth";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
-
-const ProjectList = () => (
-  <div className="container mx-auto p-4">
-    <h1 className="text-2xl font-bold">Projects</h1>
-    <p className="mt-4">Project list will be implemented in Part 5.</p>
-  </div>
-);
-
-const ProjectDetail = () => (
-  <div className="container mx-auto p-4">
-    <h1 className="text-2xl font-bold">Project Detail</h1>
-    <p className="mt-4">Project detail will be implemented in Part 5.</p>
-  </div>
-);
+import ProjectList from "./components/projects/ProjectList";
+import ProjectDetail from "./components/projects/ProjectDetail";
 
 const HomeRedirect = () => {
   const { isAuthenticated, loading } = useAuth();

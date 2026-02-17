@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import { login as loginService, register as registerService, logout as logoutService, getToken } from "../services/auth";
+import { login as loginService, register as registerService } from "../services/auth";
 import type { LoginData, RegisterData } from "../services/auth";
+import { getToken, logout as logoutService } from "../services/token";
 import { AuthContext } from "./AuthContext.types";
 import api from "../services/api";
 
