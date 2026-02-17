@@ -31,7 +31,7 @@ const Login = () => {
 
   return (
     <div className="h-[calc(100vh-80px)] flex items-center justify-center synthwave-gradient overflow-hidden">
-      <div className="card w-full max-w-md synthwave-card shadow-2xl">
+      <div className="card w-full max-w-md synthwave-card synthwave-card-auth shadow-2xl">
         <div className="card-body p-8">
           <h2 className="card-title justify-center text-3xl mb-6 synthwave-gradient-text neon-glow-purple">
             Login

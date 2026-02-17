@@ -5,14 +5,48 @@
 @layer base {
   body {
     @apply bg-synthwave-dark text-synthwave-text-primary;
+    background-image: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #081a2e 100%);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    margin-left: -100%;
     background-image:
-      linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%),
       repeating-linear-gradient(0deg,
         transparent,
-        transparent 2px,
-        rgba(168, 85, 247, 0.03) 2px,
-        rgba(168, 85, 247, 0.03) 4px);
-    min-height: 100vh;
+        transparent 49px,
+        rgba(168, 85, 247, 0.2) 49px,
+        rgba(168, 85, 247, 0.2) 50px),
+      repeating-linear-gradient(90deg,
+        transparent,
+        transparent 49px,
+        rgba(59, 130, 246, 0.15) 49px,
+        rgba(59, 130, 246, 0.15) 50px);
+    background-size: 50px 50px;
+    background-position: center 0;
+    animation: retrowaveTunnel 2s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+    transform-origin: center top;
+    transform: perspective(1000px) rotateX(75deg);
+  }
+
+  @keyframes retrowaveTunnel {
+    0% {
+      background-position: center 0;
+    }
+
+    100% {
+      background-position: center 50px;
+    }
   }
 
   * {
@@ -73,7 +107,7 @@
   }
 
   .synthwave-gradient {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #081a2e 100%);
   }
 
   .synthwave-gradient-text {
@@ -84,7 +118,16 @@
   }
 
   .synthwave-card {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.8) 0%, rgba(22, 33, 62, 0.8) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+  }
+
+  .synthwave-card-auth {
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.85) 0%, rgba(22, 33, 62, 0.85) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(168, 85, 247, 0.3);
   }
 
