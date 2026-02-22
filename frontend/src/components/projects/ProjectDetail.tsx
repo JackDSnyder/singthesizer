@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { getProject, updateProject, deleteProject, type Project } from "../../services/projects";
+import {
+  getProject,
+  updateProject,
+  deleteProject,
+  type Project,
+} from "../../services/projects";
 import ProjectForm, { type ProjectFormData } from "./ProjectForm";
 
 const ProjectDetail = () => {
@@ -126,10 +131,16 @@ const ProjectDetail = () => {
         <div className="card-body p-6">
           {isEditing ? (
             <>
-              <h2 className="card-title mb-4 synthwave-gradient-text">Edit Project</h2>
+              <h2 className="card-title mb-4 synthwave-gradient-text">
+                Edit Project
+              </h2>
               <ProjectForm
                 key={`edit-${project.id}-${isEditing}`}
-                initialData={{ name: project.name, bpm: project.bpm, key: project.key }}
+                initialData={{
+                  name: project.name,
+                  bpm: project.bpm,
+                  key: project.key,
+                }}
                 onSubmit={handleUpdate}
                 onCancel={() => setIsEditing(false)}
                 submitLabel="Save"
@@ -139,7 +150,9 @@ const ProjectDetail = () => {
           ) : (
             <>
               <div className="flex justify-between items-start mb-4">
-                <h2 className="card-title text-3xl synthwave-gradient-text neon-glow-purple">{project.name}</h2>
+                <h2 className="card-title text-3xl synthwave-gradient-text neon-glow-purple">
+                  {project.name}
+                </h2>
                 <div className="flex gap-2">
                   <button
                     className="btn btn-sm bg-synthwave-purple hover:bg-synthwave-purple/80 border-synthwave-purple text-white neon-border-purple rounded-lg py-2 px-4"
@@ -160,23 +173,37 @@ const ProjectDetail = () => {
 
               <div className="space-y-2">
                 <p className="text-sm text-synthwave-text-secondary">
-                  <span className="font-semibold text-synthwave-text-primary">BPM:</span> {project.bpm}
+                  <span className="font-semibold text-synthwave-text-primary">
+                    BPM:
+                  </span>{" "}
+                  {project.bpm}
                 </p>
                 <p className="text-sm text-synthwave-text-secondary">
-                  <span className="font-semibold text-synthwave-text-primary">Key:</span> {project.key}
+                  <span className="font-semibold text-synthwave-text-primary">
+                    Key:
+                  </span>{" "}
+                  {project.key}
                 </p>
                 <p className="text-sm text-synthwave-text-secondary">
-                  <span className="font-semibold text-synthwave-text-primary">Created:</span> {formatDate(project.created_at)}
+                  <span className="font-semibold text-synthwave-text-primary">
+                    Created:
+                  </span>{" "}
+                  {formatDate(project.created_at)}
                 </p>
                 <p className="text-sm text-synthwave-text-secondary">
-                  <span className="font-semibold text-synthwave-text-primary">Last Updated:</span> {formatDate(project.updated_at)}
+                  <span className="font-semibold text-synthwave-text-primary">
+                    Last Updated:
+                  </span>{" "}
+                  {formatDate(project.updated_at)}
                 </p>
               </div>
 
               <div className="divider border-synthwave-purple/30"></div>
 
               <div className="mt-6">
-                <h3 className="text-xl font-semibold mb-4 synthwave-gradient-text">Tracks</h3>
+                <h3 className="text-xl font-semibold mb-4 synthwave-gradient-text">
+                  Tracks
+                </h3>
                 <p className="text-synthwave-text-secondary">
                   Track management will be implemented in Phase 2.
                 </p>
@@ -190,9 +217,12 @@ const ProjectDetail = () => {
       {showDeleteModal && (
         <div className="modal modal-open">
           <div className="modal-box synthwave-card border border-red-500/50 p-6 max-w-md">
-            <h3 className="font-bold text-2xl mb-4 text-red-200">Delete Project</h3>
+            <h3 className="font-bold text-2xl mb-4 text-red-200">
+              Delete Project
+            </h3>
             <p className="mb-6 text-synthwave-text-secondary">
-              Are you sure you want to delete &quot;{project.name}&quot;? This action cannot be undone.
+              Are you sure you want to delete &quot;{project.name}&quot;? This
+              action cannot be undone.
             </p>
             <div className="flex justify-end gap-4 mt-6">
               <button
@@ -215,7 +245,10 @@ const ProjectDetail = () => {
               </button>
             </div>
           </div>
-          <div className="modal-backdrop bg-black/70" onClick={() => setShowDeleteModal(false)}></div>
+          <div
+            className="modal-backdrop bg-black/70"
+            onClick={() => setShowDeleteModal(false)}
+          ></div>
         </div>
       )}
     </div>
@@ -223,4 +256,3 @@ const ProjectDetail = () => {
 };
 
 export default ProjectDetail;
-

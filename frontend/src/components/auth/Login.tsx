@@ -20,9 +20,13 @@ const Login = () => {
       await login({ username, password });
       navigate("/projects");
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { error?: string; non_field_errors?: string[] } } };
+      const error = err as {
+        response?: { data?: { error?: string; non_field_errors?: string[] } };
+      };
       setError(
-        error.response?.data?.error || error.response?.data?.non_field_errors?.[0] || "Login failed. Please try again."
+        error.response?.data?.error ||
+          error.response?.data?.non_field_errors?.[0] ||
+          "Login failed. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -46,7 +50,9 @@ const Login = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-control w-full mb-5">
               <label className="label pb-2">
-                <span className="label-text text-synthwave-text-secondary">Username</span>
+                <span className="label-text text-synthwave-text-secondary">
+                  Username
+                </span>
               </label>
               <input
                 type="text"
@@ -61,7 +67,9 @@ const Login = () => {
 
             <div className="form-control w-full mb-6">
               <label className="label pb-2">
-                <span className="label-text text-synthwave-text-secondary">Password</span>
+                <span className="label-text text-synthwave-text-secondary">
+                  Password
+                </span>
               </label>
               <input
                 type="password"
@@ -80,7 +88,11 @@ const Login = () => {
                 className="btn bg-synthwave-blue hover:bg-synthwave-blue/80 border-synthwave-blue text-white neon-border-blue rounded-lg py-3 px-6 w-full"
                 disabled={loading}
               >
-                {loading ? <span className="loading loading-spinner"></span> : "Login"}
+                {loading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Login"
+                )}
               </button>
             </div>
           </form>
@@ -88,7 +100,10 @@ const Login = () => {
           <div className="text-center mt-6">
             <p className="text-sm text-synthwave-text-secondary">
               Don't have an account?{" "}
-              <Link to="/register" className="text-synthwave-blue hover:text-synthwave-purple neon-glow-blue">
+              <Link
+                to="/register"
+                className="text-synthwave-orange hover:text-synthwave-purple neon-glow-orange"
+              >
                 Register here
               </Link>
             </p>
@@ -100,4 +115,3 @@ const Login = () => {
 };
 
 export default Login;
-

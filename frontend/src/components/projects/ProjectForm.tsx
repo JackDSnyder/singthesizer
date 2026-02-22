@@ -48,11 +48,13 @@ const ProjectForm = ({
     } catch (err: unknown) {
       const error = err as {
         response?: {
-          data?: string | {
-            name?: string | string[];
-            bpm?: string | string[];
-            key?: string | string[];
-          };
+          data?:
+            | string
+            | {
+                name?: string | string[];
+                bpm?: string | string[];
+                key?: string | string[];
+              };
         };
       };
       if (error.response?.data) {
@@ -84,7 +86,9 @@ const ProjectForm = ({
 
       <div className="form-control w-full mb-5">
         <label className="label pb-2">
-          <span className="label-text text-synthwave-text-secondary">Project Name</span>
+          <span className="label-text text-synthwave-text-secondary">
+            Project Name
+          </span>
         </label>
         <input
           type="text"
@@ -159,7 +163,11 @@ const ProjectForm = ({
           className="btn bg-synthwave-blue hover:bg-synthwave-blue/80 border-synthwave-blue text-white neon-border-blue rounded-lg py-2.5 px-6"
           disabled={loading}
         >
-          {loading ? <span className="loading loading-spinner"></span> : submitLabel}
+          {loading ? (
+            <span className="loading loading-spinner"></span>
+          ) : (
+            submitLabel
+          )}
         </button>
       </div>
     </form>
@@ -167,4 +175,3 @@ const ProjectForm = ({
 };
 
 export default ProjectForm;
-

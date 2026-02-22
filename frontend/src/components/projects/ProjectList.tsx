@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getProjects, createProject, deleteProject, type Project } from "../../services/projects";
+import {
+  getProjects,
+  createProject,
+  deleteProject,
+  type Project,
+} from "../../services/projects";
 import ProjectForm, { type ProjectFormData } from "./ProjectForm";
 
 const ProjectList = () => {
@@ -85,7 +90,9 @@ const ProjectList = () => {
   return (
     <div className="container mx-auto p-4 max-w-6xl h-[calc(100vh-80px)] overflow-y-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-4xl font-bold synthwave-gradient-text neon-glow-purple">My Projects</h1>
+        <h1 className="text-4xl font-bold synthwave-gradient-text neon-glow-purple">
+          My Projects
+        </h1>
         <button
           className="btn bg-synthwave-blue hover:bg-synthwave-blue/80 border-synthwave-blue text-white neon-border-blue rounded-lg py-2.5 px-6"
           onClick={() => setShowCreateModal(true)}
@@ -103,7 +110,9 @@ const ProjectList = () => {
       {projects.length === 0 && !showCreateModal ? (
         <div className="card synthwave-card shadow-2xl">
           <div className="card-body text-center py-12 p-6">
-            <h2 className="text-2xl font-semibold mb-2 synthwave-gradient-text">No projects yet</h2>
+            <h2 className="text-2xl font-semibold mb-2 synthwave-gradient-text">
+              No projects yet
+            </h2>
             <p className="text-synthwave-text-secondary mb-4">
               Create your first project to get started!
             </p>
@@ -118,21 +127,38 @@ const ProjectList = () => {
       ) : projects.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map((project) => (
-            <div key={project.id} className="card synthwave-card shadow-2xl hover:neon-border-purple transition-all">
+            <div
+              key={project.id}
+              className="card synthwave-card shadow-2xl hover:neon-border-purple transition-all"
+            >
               <div className="card-body p-6">
-                <h2 className="card-title text-synthwave-text-primary mb-3 text-xl font-bold">{project.name}</h2>
+                <h2 className="card-title text-synthwave-text-primary mb-3 text-xl font-bold">
+                  {project.name}
+                </h2>
                 <div className="space-y-1 mb-4">
                   <p className="text-sm text-synthwave-text-secondary">
-                    <span className="font-semibold text-synthwave-text-primary">Created:</span> {formatDate(project.created_at)}
+                    <span className="font-semibold text-synthwave-text-primary">
+                      Created:
+                    </span>{" "}
+                    {formatDate(project.created_at)}
                   </p>
                   <p className="text-sm text-synthwave-text-secondary">
-                    <span className="font-semibold text-synthwave-text-primary">Updated:</span> {formatDate(project.updated_at)}
+                    <span className="font-semibold text-synthwave-text-primary">
+                      Updated:
+                    </span>{" "}
+                    {formatDate(project.updated_at)}
                   </p>
                   <p className="text-sm text-synthwave-text-secondary">
-                    <span className="font-semibold text-synthwave-text-primary">BPM:</span> {project.bpm}
+                    <span className="font-semibold text-synthwave-text-primary">
+                      BPM:
+                    </span>{" "}
+                    {project.bpm}
                   </p>
                   <p className="text-sm text-synthwave-text-secondary">
-                    <span className="font-semibold text-synthwave-text-primary">Key:</span> {project.key}
+                    <span className="font-semibold text-synthwave-text-primary">
+                      Key:
+                    </span>{" "}
+                    {project.key}
                   </p>
                 </div>
                 <div className="flex justify-end mt-4 gap-3">
@@ -159,7 +185,9 @@ const ProjectList = () => {
       {showCreateModal && (
         <div className="modal modal-open">
           <div className="modal-box synthwave-card border border-synthwave-purple/50 p-6 w-full max-w-full">
-            <h3 className="font-bold text-2xl mb-6 synthwave-gradient-text neon-glow-purple">Create New Project</h3>
+            <h3 className="font-bold text-2xl mb-6 synthwave-gradient-text neon-glow-purple">
+              Create New Project
+            </h3>
             <ProjectForm
               key={`create-${showCreateModal}`}
               onSubmit={handleCreate}
@@ -168,7 +196,10 @@ const ProjectList = () => {
               loading={createLoading}
             />
           </div>
-          <div className="modal-backdrop bg-black/70" onClick={() => setShowCreateModal(false)}></div>
+          <div
+            className="modal-backdrop bg-black/70"
+            onClick={() => setShowCreateModal(false)}
+          ></div>
         </div>
       )}
 
@@ -176,9 +207,12 @@ const ProjectList = () => {
       {deleteTarget && (
         <div className="modal modal-open">
           <div className="modal-box synthwave-card border border-red-500/50 p-6 w-full max-w-full md:max-w-md lg:w-[calc((100%-2rem)/3)] lg:max-w-none">
-            <h3 className="font-bold text-2xl mb-4 text-red-200">Delete Project</h3>
+            <h3 className="font-bold text-2xl mb-4 text-red-200">
+              Delete Project
+            </h3>
             <p className="mb-6 text-synthwave-text-secondary">
-              Are you sure you want to delete this project? This action cannot be undone.
+              Are you sure you want to delete this project? This action cannot
+              be undone.
             </p>
             <div className="flex justify-end gap-4 mt-6">
               <button
@@ -201,7 +235,10 @@ const ProjectList = () => {
               </button>
             </div>
           </div>
-          <div className="modal-backdrop bg-black/70" onClick={() => setDeleteTarget(null)}></div>
+          <div
+            className="modal-backdrop bg-black/70"
+            onClick={() => setDeleteTarget(null)}
+          ></div>
         </div>
       )}
     </div>
@@ -209,4 +246,3 @@ const ProjectList = () => {
 };
 
 export default ProjectList;
-

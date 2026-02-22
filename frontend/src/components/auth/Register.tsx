@@ -26,16 +26,23 @@ const Register = () => {
     setLoading(true);
 
     try {
-      await register({ username, email, password, password_confirm: passwordConfirm });
+      await register({
+        username,
+        email,
+        password,
+        password_confirm: passwordConfirm,
+      });
       navigate("/projects");
     } catch (err: unknown) {
       const error = err as {
         response?: {
-          data?: string | {
-            password?: string | string[];
-            username?: string | string[];
-            email?: string | string[];
-          };
+          data?:
+            | string
+            | {
+                password?: string | string[];
+                username?: string | string[];
+                email?: string | string[];
+              };
         };
       };
       if (error.response?.data) {
@@ -43,9 +50,13 @@ const Register = () => {
         if (typeof data === "string") {
           setError(data);
         } else if (data.password) {
-          setError(Array.isArray(data.password) ? data.password[0] : data.password);
+          setError(
+            Array.isArray(data.password) ? data.password[0] : data.password,
+          );
         } else if (data.username) {
-          setError(Array.isArray(data.username) ? data.username[0] : data.username);
+          setError(
+            Array.isArray(data.username) ? data.username[0] : data.username,
+          );
         } else if (data.email) {
           setError(Array.isArray(data.email) ? data.email[0] : data.email);
         } else {
@@ -76,7 +87,9 @@ const Register = () => {
           <form onSubmit={handleSubmit}>
             <div className="form-control w-full mb-5">
               <label className="label pb-2">
-                <span className="label-text text-synthwave-text-secondary">Username</span>
+                <span className="label-text text-synthwave-text-secondary">
+                  Username
+                </span>
               </label>
               <input
                 type="text"
@@ -91,7 +104,9 @@ const Register = () => {
 
             <div className="form-control w-full mb-5">
               <label className="label pb-2">
-                <span className="label-text text-synthwave-text-secondary">Email</span>
+                <span className="label-text text-synthwave-text-secondary">
+                  Email
+                </span>
               </label>
               <input
                 type="email"
@@ -106,7 +121,9 @@ const Register = () => {
 
             <div className="form-control w-full mb-5">
               <label className="label pb-2">
-                <span className="label-text text-synthwave-text-secondary">Password</span>
+                <span className="label-text text-synthwave-text-secondary">
+                  Password
+                </span>
               </label>
               <input
                 type="password"
@@ -121,7 +138,9 @@ const Register = () => {
 
             <div className="form-control w-full mb-6">
               <label className="label pb-2">
-                <span className="label-text text-synthwave-text-secondary">Confirm Password</span>
+                <span className="label-text text-synthwave-text-secondary">
+                  Confirm Password
+                </span>
               </label>
               <input
                 type="password"
@@ -140,7 +159,11 @@ const Register = () => {
                 className="btn bg-synthwave-blue hover:bg-synthwave-blue/80 border-synthwave-blue text-white neon-border-blue rounded-lg py-3 px-6 w-full"
                 disabled={loading}
               >
-                {loading ? <span className="loading loading-spinner"></span> : "Register"}
+                {loading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Register"
+                )}
               </button>
             </div>
           </form>
@@ -148,7 +171,10 @@ const Register = () => {
           <div className="text-center mt-6">
             <p className="text-sm text-synthwave-text-secondary">
               Already have an account?{" "}
-              <Link to="/login" className="text-synthwave-blue hover:text-synthwave-purple neon-glow-blue">
+              <Link
+                to="/login"
+                className="text-synthwave-orange hover:text-synthwave-purple neon-glow-orange"
+              >
                 Login here
               </Link>
             </p>
@@ -160,4 +186,3 @@ const Register = () => {
 };
 
 export default Register;
-
