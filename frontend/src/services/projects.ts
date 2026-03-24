@@ -6,6 +6,8 @@ export interface Project {
   user: number;
   bpm: number;
   key: string;
+  bars: number;
+  track_count: number;
   created_at: string;
   updated_at: string;
 }
@@ -14,12 +16,14 @@ export interface CreateProjectData {
   name: string;
   bpm?: number;
   key?: string;
+  bars?: number;
 }
 
 export interface UpdateProjectData {
   name: string;
   bpm?: number;
   key?: string;
+  bars?: number;
 }
 
 export const getProjects = async (): Promise<Project[]> => {

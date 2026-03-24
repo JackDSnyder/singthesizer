@@ -140,11 +140,13 @@ const ProjectDetail = () => {
                   name: project.name,
                   bpm: project.bpm,
                   key: project.key,
+                  bars: project.bars,
                 }}
                 onSubmit={handleUpdate}
                 onCancel={() => setIsEditing(false)}
                 submitLabel="Save"
                 loading={updateLoading}
+                barsLocked={project.track_count > 0}
               />
             </>
           ) : (
@@ -153,7 +155,13 @@ const ProjectDetail = () => {
                 <h2 className="card-title text-3xl synthwave-gradient-text neon-glow-purple">
                   {project.name}
                 </h2>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    to={`/projects/${project.id}/record`}
+                    className="btn btn-sm bg-synthwave-blue hover:bg-synthwave-blue/80 border-synthwave-blue text-white neon-border-blue rounded-lg py-2 px-4"
+                  >
+                    Record track
+                  </Link>
                   <button
                     className="btn btn-sm bg-synthwave-purple hover:bg-synthwave-purple/80 border-synthwave-purple text-white neon-border-purple rounded-lg py-2 px-4"
                     onClick={() => setIsEditing(true)}
@@ -186,6 +194,13 @@ const ProjectDetail = () => {
                 </p>
                 <p className="text-sm text-synthwave-text-secondary">
                   <span className="font-semibold text-synthwave-text-primary">
+                    Length:
+                  </span>{" "}
+                  {project.bars} {project.bars === 1 ? "bar" : "bars"} &middot;{" "}
+                  {((project.bars * 4 * 60) / project.bpm).toFixed(1)}s at {project.bpm} BPM
+                </p>
+                <p className="text-sm text-synthwave-text-secondary">
+                  <span className="font-semibold text-synthwave-text-primary">
                     Created:
                   </span>{" "}
                   {formatDate(project.created_at)}
@@ -204,9 +219,15 @@ const ProjectDetail = () => {
                 <h3 className="text-xl font-semibold mb-4 synthwave-gradient-text">
                   Tracks
                 </h3>
-                <p className="text-synthwave-text-secondary">
-                  Track management will be implemented in Phase 2.
+                <p className="text-synthwave-text-secondary mb-3">
+                  Record a vocal take and analyze it into note events.
                 </p>
+                <Link
+                  to={`/projects/${project.id}/record`}
+                  className="btn bg-synthwave-blue hover:bg-synthwave-blue/80 border-synthwave-blue text-white neon-border-blue rounded-lg py-2.5 px-6"
+                >
+                  Record track
+                </Link>
               </div>
             </>
           )}

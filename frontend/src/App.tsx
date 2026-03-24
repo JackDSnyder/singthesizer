@@ -7,6 +7,7 @@ import Register from "./components/auth/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProjectList from "./components/projects/ProjectList";
 import ProjectDetail from "./components/projects/ProjectDetail";
+import RecordTrack from "./components/tracks/RecordTrack";
 
 const HomeRedirect = () => {
   const { isAuthenticated, loading } = useAuth();
@@ -37,6 +38,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ProjectList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects/:id/record"
+              element={
+                <ProtectedRoute>
+                  <RecordTrack />
                 </ProtectedRoute>
               }
             />

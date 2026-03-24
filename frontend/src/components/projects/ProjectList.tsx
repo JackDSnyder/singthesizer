@@ -160,6 +160,13 @@ const ProjectList = () => {
                     </span>{" "}
                     {project.key}
                   </p>
+                  <p className="text-sm text-synthwave-text-secondary">
+                    <span className="font-semibold text-synthwave-text-primary">
+                      Length:
+                    </span>{" "}
+                    {project.bars} {project.bars === 1 ? "bar" : "bars"} &middot;{" "}
+                    {((project.bars * 4 * 60) / project.bpm).toFixed(1)}s
+                  </p>
                 </div>
                 <div className="flex justify-end mt-4 gap-3">
                   <Link
