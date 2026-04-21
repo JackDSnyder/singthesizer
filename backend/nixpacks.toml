@@ -1,0 +1,5 @@
+[phases.setup]
+# Install runtime binaries needed for decoding browser-recorded WebM reliably.
+# "..." preserves the provider's default packages.
+nixPkgs = ["...", "ffmpeg", "libsndfile"]
+
