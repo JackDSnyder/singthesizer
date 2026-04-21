@@ -171,8 +171,13 @@ const RecordTrack = () => {
   if (loadError || !project) {
     return (
       <div className="container mx-auto p-4 max-w-6xl min-h-screen">
-        <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
-          <span>{loadError || "Project not found."}</span>
+        <div
+          role="alert"
+          className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+        >
+          <span className="neon-glow-orange">
+            {loadError || "Project not found."}
+          </span>
         </div>
         <Link
           to="/projects"
@@ -229,8 +234,11 @@ const RecordTrack = () => {
           </div>
 
           {recordingError && (
-            <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
-              {recordingError}
+            <div
+              role="alert"
+              className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+            >
+              <span className="neon-glow-orange">{recordingError}</span>
             </div>
           )}
 
@@ -353,14 +361,20 @@ const RecordTrack = () => {
           </div>
 
           {analyzeError && (
-            <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
-              {analyzeError}
+            <div
+              role="alert"
+              className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+            >
+              <span className="neon-glow-orange">{analyzeError}</span>
             </div>
           )}
 
           {saveError && (
-            <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
-              {saveError}
+            <div
+              role="alert"
+              className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+            >
+              <span className="neon-glow-orange">{saveError}</span>
             </div>
           )}
 

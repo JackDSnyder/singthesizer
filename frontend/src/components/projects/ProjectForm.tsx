@@ -86,7 +86,10 @@ const ProjectForm = ({
   return (
     <form onSubmit={handleSubmit}>
       {error && (
-        <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
+        <div
+          role="alert"
+          className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+        >
           <span className="neon-glow-orange">{error}</span>
         </div>
       )}

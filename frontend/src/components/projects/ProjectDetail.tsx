@@ -383,7 +383,10 @@ const ProjectDetail = () => {
   if (error && !project) {
     return (
       <div className="container mx-auto p-4 max-w-6xl min-h-screen">
-        <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
+        <div
+          role="alert"
+          className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+        >
           <span className="neon-glow-orange">{error}</span>
         </div>
         <Link
@@ -787,8 +790,11 @@ const ProjectDetail = () => {
               Edit Project
             </h3>
             {editError && (
-              <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
-                {editError}
+              <div
+                role="alert"
+                className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+              >
+                <span className="neon-glow-orange">{editError}</span>
               </div>
             )}
             <ProjectForm
@@ -835,8 +841,11 @@ const ProjectDetail = () => {
               action cannot be undone.
             </p>
             {deleteProjectError && (
-              <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
-                {deleteProjectError}
+              <div
+                role="alert"
+                className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+              >
+                <span className="neon-glow-orange">{deleteProjectError}</span>
               </div>
             )}
             <div className="flex justify-end gap-4 mt-6">
@@ -896,8 +905,11 @@ const ProjectDetail = () => {
               autoFocus
             />
             {renameError && (
-              <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
-                {renameError}
+              <div
+                role="alert"
+                className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+              >
+                <span className="neon-glow-orange">{renameError}</span>
               </div>
             )}
             <div className="flex justify-end gap-4 mt-6">
@@ -950,8 +962,11 @@ const ProjectDetail = () => {
               This action cannot be undone.
             </p>
             {deleteTrackError && (
-              <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
-                {deleteTrackError}
+              <div
+                role="alert"
+                className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+              >
+                <span className="neon-glow-orange">{deleteTrackError}</span>
               </div>
             )}
             <div className="flex justify-end gap-4 mt-6">
