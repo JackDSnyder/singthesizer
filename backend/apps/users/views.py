@@ -41,7 +41,7 @@ def login_view(request):
 
     if user is None:
         return Response(
-            {"error": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED
+            {"error": "Invalid credentials."}, status=status.HTTP_400_BAD_REQUEST
         )
 
     token, created = Token.objects.get_or_create(user=user)

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getProject, type Project } from "../../services/projects";
@@ -6,8 +7,20 @@ import { analyzeAudio, type NoteEvent } from "../../services/audioAnalysis";
 import { createTrack } from "../../services/tracks";
 import { useRecording } from "../../hooks/useRecording";
 import { useNotePreview } from "../../hooks/useNotePreview";
+import { usePlayheadBeat } from "../../hooks/usePlayheadBeat";
+import { TrackNoteVisualization } from "./TrackNoteVisualization";
+import {
+  clampGain,
+  loadProjectMix,
+  saveProjectMixMaster,
+} from "../../utils/projectMixStorage";
+import { getApiErrorMessage } from "../../utils/apiErrorMessage";
 
 const formatSeconds = (s: number) => s.toFixed(1);
+
+/** Unified copy when analysis returns zero notes (not a server error). */
+const EMPTY_NOTE_EVENTS_GUIDANCE =
+  "No notes detected. Try singing a little louder or closer to the mic, then discard this take and record again.";
 
 const RecordTrack = () => {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +36,7 @@ const RecordTrack = () => {
   const [noteEvents, setNoteEvents] = useState<NoteEvent[] | null>(null);
   const [saveLoading, setSaveLoading] = useState(false);
   const [saveError, setSaveError] = useState("");
+  const [previewMaster, setPreviewMaster] = useState(1);
 
   const maxSeconds =
     project && !Number.isNaN(projectId)
@@ -43,6 +57,13 @@ const RecordTrack = () => {
 
   const { isPlaying, play, stop: stopPreview } = useNotePreview();
 
+  const playheadBeat = usePlayheadBeat({
+    isPlaying,
+    bpm: project?.bpm ?? 120,
+    noteEvents: noteEvents ?? [],
+    totalBeats: project ? project.bars * 4 : 4,
+  });
+
   useEffect(() => {
     if (Number.isNaN(projectId)) {
       setLoadError("Invalid project.");
@@ -56,14 +77,21 @@ const RecordTrack = () => {
         setLoadingProject(true);
         setLoadError("");
         const data = await getProject(projectId);
-        if (!cancelled) setProject(data);
-      } catch (err: unknown) {
-        const e = err as { response?: { status: number } };
         if (!cancelled) {
-          if (e.response?.status === 404) {
+          setProject(data);
+          setPreviewMaster(loadProjectMix(data.id).master);
+        }
+      } catch (err: unknown) {
+        if (!cancelled) {
+          if (axios.isAxiosError(err) && err.response?.status === 404) {
             setLoadError("Project not found.");
           } else {
-            setLoadError("Failed to load project.");
+            setLoadError(
+              getApiErrorMessage(
+                err,
+                "Failed to load project. Please try again.",
+              ),
+            );
           }
         }
       } finally {
@@ -76,6 +104,15 @@ const RecordTrack = () => {
     };
   }, [projectId]);
 
+  useEffect(() => {
+    const pid = project?.id;
+    if (pid == null) return;
+    const tmr = window.setTimeout(() => {
+      saveProjectMixMaster(pid, previewMaster);
+    }, 250);
+    return () => window.clearTimeout(tmr);
+  }, [project?.id, previewMaster]);
+
   const handleAnalyze = async () => {
     if (!project || !blob) return;
     stopPreview();
@@ -85,17 +122,20 @@ const RecordTrack = () => {
       const events = await analyzeAudio(project.id, blob);
       setNoteEvents(events);
     } catch (err: unknown) {
-      const ax = err as {
-        response?: { data?: { detail?: string; audio_file?: string[] } };
-      };
-      const data = ax.response?.data;
-      if (typeof data === "object" && data && "detail" in data && data.detail) {
-        setAnalyzeError(String(data.detail));
-      } else if (data && typeof data === "object" && "audio_file" in data) {
-        const af = (data as { audio_file?: string[] }).audio_file;
-        setAnalyzeError(af?.[0] ?? "Invalid audio file.");
+      if (
+        axios.isAxiosError(err) &&
+        err.response?.data &&
+        typeof err.response.data === "object" &&
+        "audio_file" in err.response.data
+      ) {
+        const af = (err.response.data as { audio_file?: string[] }).audio_file;
+        setAnalyzeError(
+          Array.isArray(af) && af[0] ? String(af[0]) : "Invalid audio file.",
+        );
       } else {
-        setAnalyzeError("Analysis failed. Please try again.");
+        setAnalyzeError(
+          getApiErrorMessage(err, "Analysis failed. Please try again."),
+        );
       }
     } finally {
       setAnalyzeLoading(false);
@@ -112,17 +152,9 @@ const RecordTrack = () => {
       await createTrack(project.id, { name, note_events: noteEvents });
       navigate(`/projects/${project.id}`);
     } catch (err: unknown) {
-      const ax = err as {
-        response?: { data?: Record<string, unknown> | string };
-      };
-      const data = ax.response?.data;
-      if (typeof data === "object" && data && "detail" in data && data.detail) {
-        setSaveError(String(data.detail));
-      } else if (typeof data === "string") {
-        setSaveError(data);
-      } else {
-        setSaveError("Could not save track. Please try again.");
-      }
+      setSaveError(
+        getApiErrorMessage(err, "Could not save track. Please try again."),
+      );
     } finally {
       setSaveLoading(false);
     }
@@ -175,7 +207,10 @@ const RecordTrack = () => {
             Record track
           </h1>
           <p className="text-synthwave-text-secondary mb-6">
-            Project: <span className="text-synthwave-text-primary font-semibold">{project.name}</span>
+            Project:{" "}
+            <span className="text-synthwave-text-primary font-semibold">
+              {project.name}
+            </span>
             {" · "}
             Key {project.key} · {project.bpm} BPM
           </p>
@@ -183,11 +218,13 @@ const RecordTrack = () => {
           <div className="rounded-lg bg-synthwave-card/50 border border-synthwave-purple/30 p-4 mb-6">
             <p className="text-sm text-synthwave-text-secondary">
               Max length:{" "}
-              <span className="text-synthwave-text-primary font-mono">{targetLabel}</span>
+              <span className="text-synthwave-text-primary font-mono">
+                {targetLabel}
+              </span>
             </p>
             <p className="text-xs text-synthwave-text-secondary mt-2">
-              Pressing Start recording begins a 3-second count-in, then recording. Stops at this
-              length or when you press Stop.
+              Pressing Start recording begins a 3-second count-in, then
+              recording. Stops at this length or when you press Stop.
             </p>
           </div>
 
@@ -276,7 +313,10 @@ const RecordTrack = () => {
                   >
                     {analyzeLoading ? (
                       <>
-                        <span className="loading loading-spinner loading-md text-white" aria-hidden />
+                        <span
+                          className="loading loading-spinner loading-md text-white"
+                          aria-hidden
+                        />
                         <span>Analyzing…</span>
                       </>
                     ) : (
@@ -297,7 +337,10 @@ const RecordTrack = () => {
                   >
                     {saveLoading ? (
                       <>
-                        <span className="loading loading-spinner loading-md text-white" aria-hidden />
+                        <span
+                          className="loading loading-spinner loading-md text-white"
+                          aria-hidden
+                        />
                         <span>Saving…</span>
                       </>
                     ) : (
@@ -326,57 +369,94 @@ const RecordTrack = () => {
               <h2 className="text-xl font-semibold synthwave-gradient-text mb-1">
                 Analysis preview
               </h2>
+              {noteEvents.length === 0 && (
+                <div
+                  className="alert border-amber-500/35 bg-amber-950/20 text-amber-100/95 mb-3"
+                  role="status"
+                >
+                  {EMPTY_NOTE_EVENTS_GUIDANCE}
+                </div>
+              )}
               <p className="text-xs text-synthwave-text-secondary mb-3 opacity-85">
-                Detected notes from your take. Use Play to hear them with the built-in synth.
+                Detected notes from your take (timeline below). Use Play to hear
+                them with the built-in synth.
               </p>
 
               <div className="flex flex-wrap gap-3 items-center mb-4">
                 <span className="text-sm text-synthwave-text-secondary font-semibold">
                   Preview playback
                 </span>
-                <button
-                  type="button"
-                  className={`btn rounded-lg py-2 px-5 ${
-                    isPlaying
-                      ? "bg-synthwave-purple/60 border-synthwave-purple/70 text-white/90 cursor-default"
-                      : "bg-synthwave-purple hover:bg-synthwave-purple/80 border-synthwave-purple text-white neon-border-purple"
-                  }`}
-                  disabled={
-                    isPlaying ||
-                    noteEvents.length === 0 ||
-                    status === "recording" ||
-                    status === "counting" ||
-                    analyzeLoading ||
-                    saveLoading
-                  }
-                  onClick={() => void play(noteEvents, project.bpm)}
-                >
-                  {isPlaying ? "Playing…" : "Play"}
-                </button>
-                <button
-                  type="button"
-                  className={`btn rounded-lg py-2 px-5 transition-all ${
-                    isPlaying
-                      ? "bg-synthwave-purple hover:bg-synthwave-purple/90 border-synthwave-purple text-white neon-border-purple shadow-[0_0_20px_rgba(168,85,247,0.55)] ring-2 ring-fuchsia-400/70"
-                      : "bg-synthwave-card border-synthwave-purple/40 text-synthwave-text-secondary opacity-70"
-                  }`}
-                  disabled={!isPlaying}
-                  onClick={() => stopPreview()}
-                >
-                  Stop preview
-                </button>
+                <label className="flex items-center gap-2 min-w-0 max-w-[200px]">
+                  <span className="text-xs text-synthwave-text-secondary shrink-0">
+                    Master
+                  </span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    step={1}
+                    value={Math.round(previewMaster * 100)}
+                    aria-label="Master volume for preview"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={Math.round(previewMaster * 100)}
+                    disabled={isPlaying}
+                    onChange={(e) =>
+                      setPreviewMaster(clampGain(Number(e.target.value) / 100))
+                    }
+                    className="range range-xs range-primary flex-1 min-h-8 opacity-90"
+                  />
+                </label>
+                {!isPlaying && (
+                  <button
+                    type="button"
+                    className="btn rounded-lg py-2 px-5 bg-synthwave-purple hover:bg-synthwave-purple/80 border-synthwave-purple text-white neon-border-purple"
+                    disabled={
+                      noteEvents.length === 0 ||
+                      status === "recording" ||
+                      status === "counting" ||
+                      analyzeLoading ||
+                      saveLoading
+                    }
+                    onClick={() =>
+                      void play(
+                        noteEvents.map((ev) => ({
+                          ...ev,
+                          gain: clampGain(previewMaster),
+                        })),
+                        project.bpm,
+                      )
+                    }
+                  >
+                    Play
+                  </button>
+                )}
+                {isPlaying && (
+                  <button
+                    type="button"
+                    className="btn rounded-lg py-2 px-5 transition-all bg-synthwave-purple hover:bg-synthwave-purple/90 border-synthwave-purple text-white neon-border-purple shadow-[0_0_20px_rgba(168,85,247,0.55)] ring-2 ring-fuchsia-400/70"
+                    onClick={() => stopPreview()}
+                  >
+                    Stop preview
+                  </button>
+                )}
                 {noteEvents.length === 0 && (
                   <span className="text-xs text-synthwave-text-secondary">
-                    No notes detected — try louder or closer to the mic, then re-record.
+                    {EMPTY_NOTE_EVENTS_GUIDANCE}
                   </span>
                 )}
               </div>
 
-              <pre className="bg-black/40 border border-synthwave-purple/30 rounded-lg p-4 text-sm text-synthwave-text-secondary overflow-x-auto max-h-96 overflow-y-auto font-mono">
-                {JSON.stringify(noteEvents, null, 2)}
-              </pre>
+              <TrackNoteVisualization
+                noteEvents={noteEvents}
+                totalBeats={project.bars * 4}
+                className="mb-4"
+                playheadBeat={playheadBeat}
+              />
+
               <p className="text-xs text-synthwave-text-secondary mt-2 opacity-70">
-                {noteEvents.length} note{noteEvents.length === 1 ? "" : "s"}. Timeline UI coming later.
+                {noteEvents.length} note{noteEvents.length === 1 ? "" : "s"}{" "}
+                detected.
               </p>
             </div>
           )}

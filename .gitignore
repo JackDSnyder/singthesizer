@@ -64,6 +64,7 @@ dist-ssr/
 *.njsproj
 *.sln
 *.sw?
+notes/
 
 # OS
 .DS_Store

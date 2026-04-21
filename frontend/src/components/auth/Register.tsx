@@ -79,14 +79,17 @@ const Register = () => {
           </h2>
 
           {error && (
-            <div className="alert bg-red-900/30 border-red-500/50 text-red-200 mb-4">
+            <div
+              role="alert"
+              className="mb-4 rounded-xl border border-red-500/50 bg-red-900/30 px-4 py-3 text-center text-red-200"
+            >
               <span className="neon-glow-orange">{error}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
             <div className="form-control w-full mb-5">
-              <label className="label pb-2">
+              <label className="label pb-2 mb-3">
                 <span className="label-text text-synthwave-text-secondary">
                   Username
                 </span>
@@ -103,7 +106,7 @@ const Register = () => {
             </div>
 
             <div className="form-control w-full mb-5">
-              <label className="label pb-2">
+              <label className="label pb-2 mb-3">
                 <span className="label-text text-synthwave-text-secondary">
                   Email
                 </span>
@@ -120,7 +123,7 @@ const Register = () => {
             </div>
 
             <div className="form-control w-full mb-5">
-              <label className="label pb-2">
+              <label className="label pb-2 mb-3">
                 <span className="label-text text-synthwave-text-secondary">
                   Password
                 </span>
@@ -137,7 +140,7 @@ const Register = () => {
             </div>
 
             <div className="form-control w-full mb-6">
-              <label className="label pb-2">
+              <label className="label pb-2 mb-3">
                 <span className="label-text text-synthwave-text-secondary">
                   Confirm Password
                 </span>

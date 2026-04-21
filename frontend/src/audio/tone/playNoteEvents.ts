@@ -1,6 +1,14 @@
 import * as Tone from "tone";
 import type { NoteEvent } from "../../services/audioAnalysis";
 
+/** Preview scheduling: optional per-note gain (0–1), applied as synth velocity. */
+export type PlayableNote = NoteEvent & { gain?: number };
+
+function clampVelocity(gain: number | undefined): number {
+  if (gain === undefined || Number.isNaN(gain)) return 1;
+  return Math.max(0, Math.min(1, gain));
+}
+
 /**
  * Stop transport, clear scheduled callbacks, reset timeline to the start, set BPM.
  */
@@ -30,7 +38,7 @@ export function stopPlayback(synth?: Tone.PolySynth): void {
  * @param onEnded — invoked when the last note has finished (transport stopped).
  */
 export async function playNoteEvents(
-  events: NoteEvent[],
+  events: PlayableNote[],
   bpm: number,
   synth: Tone.PolySynth,
   onEnded?: () => void
@@ -49,9 +57,10 @@ export async function playNoteEvents(
     const startSec = ev.start * beatToSec;
     const durSec = Math.max(0.02, ev.duration * beatToSec);
     const note = `${ev.pitch_class}${ev.octave}`;
+    const velocity = clampVelocity(ev.gain);
 
     transport.schedule((time) => {
-      synth.triggerAttackRelease(note, durSec, time);
+      synth.triggerAttackRelease(note, durSec, time, velocity);
     }, startSec);
 
     maxEnd = Math.max(maxEnd, startSec + durSec);

@@ -22,11 +22,16 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor: Handle 401 errors (token expired/invalid)
+// Response interceptor: 401 = token missing/expired on protected API (not login failure).
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const status = error.response?.status;
+    const url = String(error.config?.url ?? "");
+    const isAuthLoginAttempt =
+      url.includes("auth/login") || /(^|\/)login\/?(\?|$)/.test(url);
+
+    if (status === 401 && !isAuthLoginAttempt) {
       logout();
       window.location.href = "/login";
     }

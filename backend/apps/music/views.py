@@ -4,12 +4,15 @@ import tempfile
 import traceback
 
 from django.conf import settings
+from django.db import transaction
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status, viewsets
+from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import api_view, parser_classes, permission_classes
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 
+from .constants import MAX_TRACKS_PER_PROJECT
 from .models import Project, Track
 from .serializers import AudioAnalysisSerializer, ProjectSerializer, TrackSerializer
 from .services.pipeline import note_events_from_audio_path
@@ -41,8 +44,17 @@ class TrackViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         project_id = self.kwargs.get("project_id")
-        project = get_object_or_404(Project, id=project_id, user=self.request.user)
-        serializer.save(project=project)
+        with transaction.atomic():
+            project = get_object_or_404(
+                Project.objects.select_for_update(),
+                id=project_id,
+                user=self.request.user,
+            )
+            if project.tracks.count() >= MAX_TRACKS_PER_PROJECT:
+                raise ValidationError(
+                    f"Maximum {MAX_TRACKS_PER_PROJECT} tracks per project."
+                )
+            serializer.save(project=project)
 
 
 @api_view(["POST"])
@@ -77,9 +89,10 @@ def analyze_audio_view(request, project_id):
     except Exception as e:
         msg = str(e).strip() or f"{type(e).__name__}"
         logger.exception("analyze-audio failed: %s", msg)
-        payload = {"detail": msg}
         if settings.DEBUG:
-            payload["traceback"] = traceback.format_exc()
+            payload = {"detail": msg, "traceback": traceback.format_exc()}
+        else:
+            payload = {"detail": "Analysis failed. Please try again."}
         return Response(payload, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     finally:
         if tmp_path and os.path.exists(tmp_path):

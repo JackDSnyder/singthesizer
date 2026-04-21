@@ -1,5 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
 import type { FormEvent } from "react";
+import { getApiErrorMessage } from "../../utils/apiErrorMessage";
 
 export interface ProjectFormData {
   name: string;
@@ -26,10 +28,13 @@ const ProjectForm = ({
   barsLocked = false,
 }: ProjectFormProps) => {
   const [name, setName] = useState(initialData?.name || "");
-  const [bpm, setBpm] = useState<number>(initialData?.bpm ?? 120);
+  const [bpm, setBpm] = useState<string>(String(initialData?.bpm ?? 120));
   const [key, setKey] = useState(initialData?.key || "C");
   const [bars, setBars] = useState<number>(initialData?.bars ?? 4);
   const [error, setError] = useState("");
+
+  const bpmNum = Number.parseInt(bpm, 10);
+  const bpmForPreview = Number.isNaN(bpmNum) ? 120 : bpmNum;
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -40,8 +45,7 @@ const ProjectForm = ({
       return;
     }
 
-    const bpmNum = parseInt(bpm.toString(), 10);
-    if (isNaN(bpmNum) || bpmNum < 40 || bpmNum > 200) {
+    if (Number.isNaN(bpmNum) || bpmNum < 40 || bpmNum > 200) {
       setError("BPM must be between 40 and 200.");
       return;
     }
@@ -49,36 +53,33 @@ const ProjectForm = ({
     try {
       await onSubmit({ name: name.trim(), bpm: bpmNum, key: key.trim(), bars });
     } catch (err: unknown) {
-      const error = err as {
-        response?: {
-          data?:
-            | string
-            | {
-                name?: string | string[];
-                bpm?: string | string[];
-                key?: string | string[];
-                bars?: string | string[];
-              };
+      if (axios.isAxiosError(err) && err.response?.data && typeof err.response.data === "object") {
+        const data = err.response.data as {
+          name?: string | string[];
+          bpm?: string | string[];
+          key?: string | string[];
+          bars?: string | string[];
         };
-      };
-      if (error.response?.data) {
-        const data = error.response.data;
-        if (typeof data === "string") {
-          setError(data);
-        } else if (data.name) {
-          setError(Array.isArray(data.name) ? data.name[0] : data.name);
-        } else if (data.bpm) {
-          setError(Array.isArray(data.bpm) ? data.bpm[0] : data.bpm);
-        } else if (data.key) {
-          setError(Array.isArray(data.key) ? data.key[0] : data.key);
-        } else if (data.bars) {
-          setError(Array.isArray(data.bars) ? data.bars[0] : data.bars);
-        } else {
-          setError("Failed to save project. Please try again.");
+        if (data.name) {
+          setError(Array.isArray(data.name) ? String(data.name[0]) : data.name);
+          return;
         }
-      } else {
-        setError("Failed to save project. Please try again.");
+        if (data.bpm) {
+          setError(Array.isArray(data.bpm) ? String(data.bpm[0]) : data.bpm);
+          return;
+        }
+        if (data.key) {
+          setError(Array.isArray(data.key) ? String(data.key[0]) : data.key);
+          return;
+        }
+        if (data.bars) {
+          setError(Array.isArray(data.bars) ? String(data.bars[0]) : data.bars);
+          return;
+        }
       }
+      setError(
+        getApiErrorMessage(err, "Failed to save project. Please try again.")
+      );
     }
   };
 
@@ -91,7 +92,7 @@ const ProjectForm = ({
       )}
 
       <div className="form-control w-full mb-5">
-        <label className="label pb-2">
+        <label className="label pb-2 mb-3">
           <span className="label-text text-synthwave-text-secondary">
             Project Name
           </span>
@@ -108,7 +109,7 @@ const ProjectForm = ({
       </div>
 
       <div className="form-control w-full mb-5">
-        <label className="label pb-2">
+        <label className="label pb-2 mb-3">
           <span className="label-text text-synthwave-text-secondary">BPM</span>
         </label>
         <input
@@ -119,8 +120,7 @@ const ProjectForm = ({
           className="input input-bordered w-full bg-synthwave-card border-synthwave-purple/50 text-synthwave-text-primary synthwave-input-focus rounded-lg py-2.5 px-4"
           value={bpm}
           onChange={(e) => {
-            const value = parseInt(e.target.value, 10);
-            setBpm(isNaN(value) ? 120 : value);
+            setBpm(e.target.value);
           }}
           required
           disabled={loading}
@@ -128,7 +128,7 @@ const ProjectForm = ({
       </div>
 
       <div className="form-control w-full mb-5">
-        <label className="label pb-2">
+        <label className="label pb-2 mb-3">
           <span className="label-text text-synthwave-text-secondary">Key</span>
         </label>
         <select
@@ -154,13 +154,14 @@ const ProjectForm = ({
       </div>
 
       <div className="form-control w-full mb-5">
-        <label className="label pb-2">
+        <label className="label pb-2 mb-3">
           <span className="label-text text-synthwave-text-secondary">
             Length
           </span>
         </label>
         <p className="mb-3 text-base leading-snug text-synthwave-text-secondary">
-          ≈ {((bars * 4 * 60) / bpm).toFixed(1)}s at {bpm} BPM
+          ≈ {((bars * 4 * 60) / bpmForPreview).toFixed(1)}s at {bpmForPreview}{" "}
+          BPM
         </p>
         <div
           className="grid w-full grid-cols-2 gap-2 sm:grid-cols-4"

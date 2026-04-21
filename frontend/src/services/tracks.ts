@@ -10,6 +10,11 @@ export interface Track {
   updated_at: string;
 }
 
+export async function listTracks(projectId: number): Promise<Track[]> {
+  const response = await api.get<Track[]>(`projects/${projectId}/tracks/`);
+  return response.data;
+}
+
 export async function createTrack(
   projectId: number,
   data: { name: string; note_events: NoteEvent[] }
@@ -19,4 +24,16 @@ export async function createTrack(
     data
   );
   return response.data;
+}
+
+export async function updateTrack(
+  trackId: number,
+  data: { name: string }
+): Promise<Track> {
+  const response = await api.patch<Track>(`tracks/${trackId}/`, data);
+  return response.data;
+}
+
+export async function deleteTrack(trackId: number): Promise<void> {
+  await api.delete(`tracks/${trackId}/`);
 }

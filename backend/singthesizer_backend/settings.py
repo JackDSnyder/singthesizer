@@ -29,7 +29,14 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "False").lower() in ("true", "1", "yes")
 
-ALLOWED_HOSTS = []
+# Production host(s) for singthesizer.com; localhost for local dev.
+ALLOWED_HOSTS = [
+    "singthesizer.com",
+    "www.singthesizer.com",
+    "api.singthesizer.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
@@ -50,6 +57,8 @@ INSTALLED_APPS = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://singthesizer.com",
+    "https://www.singthesizer.com",
 ]
 
 MIDDLEWARE = [

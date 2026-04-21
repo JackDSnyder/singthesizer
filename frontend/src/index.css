@@ -131,6 +131,21 @@
     border: 1px solid rgba(168, 85, 247, 0.3);
   }
 
+  /** Modal dialogs: slightly lifted from `.synthwave-card` so `bg-synthwave-card` inputs read clearly. */
+  .synthwave-modal-panel {
+    background: linear-gradient(
+      145deg,
+      rgba(40, 42, 68, 0.98) 0%,
+      rgba(34, 38, 62, 0.98) 45%,
+      rgba(30, 34, 56, 0.97) 100%
+    );
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.045),
+      0 12px 40px rgba(0, 0, 0, 0.4);
+  }
+
   .synthwave-input-focus {
     @apply focus:border-synthwave-purple focus:outline-none focus:ring-2 focus:ring-synthwave-purple focus:ring-opacity-50;
     transition: all 0.3s ease;

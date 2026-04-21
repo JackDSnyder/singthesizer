@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { PolySynth } from "tone";
 import { createPreviewSynth } from "../audio/tone/synthFactory";
-import { playNoteEvents, stopPlayback } from "../audio/tone/playNoteEvents";
-import type { NoteEvent } from "../services/audioAnalysis";
+import {
+  playNoteEvents,
+  stopPlayback,
+  type PlayableNote,
+} from "../audio/tone/playNoteEvents";
 
 /**
  * Lazy PolySynth + Transport preview for analyzed note_events.
@@ -25,7 +28,7 @@ export function useNotePreview() {
   }, []);
 
   const play = useCallback(
-    async (events: NoteEvent[], bpm: number) => {
+    async (events: PlayableNote[], bpm: number) => {
       if (events.length === 0) return;
       stopPlayback(getSynth());
       setIsPlaying(true);
