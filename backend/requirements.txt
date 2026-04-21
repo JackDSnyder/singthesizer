@@ -7,3 +7,4 @@ psycopg2-binary==2.9.11
 python-dotenv==1.2.1
 soundfile>=0.12.1
 sqlparse==0.5.5
+gunicorn>=22.0.0
