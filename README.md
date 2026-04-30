@@ -1,6 +1,6 @@
 # Singthesizer
 
-Singthesizer is a browser-based music sketching tool that helps anyone with a melody in their head get it out of the "voice memo" stage. You pick a speed (BPM) and key, sing or hum for a few bars, and the app turns what you sang into clear notes you can hear back like a simple tune — not just your voice on repeat. You can record more tracks, balance how loud each one is, and play them together so rough ideas feel a little more like a real song.
+Singthesizer is a browser-based music sketching tool that helps anyone with a melody in their head get it out of the "voice memo" stage. You pick a speed (BPM) and key, sing or hum for a few bars, and the app turns what you sang into clear notes you can hear back like a simple tune, not just your voice on repeat. You can record more tracks, balance how loud each one is, and play them together so rough ideas feel a little more like a real song.
 
 ## How it works
 
@@ -73,7 +73,3 @@ singthesizer/
 2. In `backend/`: install Python dependencies from `requirements.txt`, run migrations, and start the Django server.
 3. In `frontend/`: install Node dependencies and run the Vite dev server.
 4. Open the app in a browser on `localhost` (microphone access requires HTTPS or `localhost`).
-
-## Source
-
-GitHub: https://github.com/JackDSnyder/singthesizer
