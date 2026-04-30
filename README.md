@@ -15,10 +15,57 @@ A user signs in, creates a project (name, BPM, key, and length in bars), and rec
 
 ## Repository layout
 
-- `frontend/` — React + TypeScript client (recording UI, piano roll, preview, project/track management)
-- `backend/` — Django REST API and the audio analysis pipeline (`apps/music/services/`)
-- `docker-compose.yaml` — Local Postgres service
-- `notes/` — Project documentation, defense notes, and demo script
+```
+singthesizer/
+├── backend/                          # Django REST API + audio analysis pipeline
+│   ├── apps/
+│   │   ├── music/                    # Projects, tracks, and analyze-audio endpoint
+│   │   │   ├── migrations/
+│   │   │   ├── services/             # Audio analysis pipeline
+│   │   │   │   ├── audio_io.py
+│   │   │   │   ├── keys_scales.py
+│   │   │   │   ├── note_events.py
+│   │   │   │   ├── pipeline.py
+│   │   │   │   ├── pitch_detection.py
+│   │   │   │   ├── pitch_smooth.py
+│   │   │   │   └── quantization.py
+│   │   │   ├── tests/
+│   │   │   ├── admin.py
+│   │   │   ├── apps.py
+│   │   │   ├── constants.py
+│   │   │   ├── models.py
+│   │   │   ├── serializers.py
+│   │   │   ├── urls.py
+│   │   │   └── views.py
+│   │   └── users/                    # Auth: register, login, logout, token
+│   ├── singthesizer_backend/         # Django project settings, root URLs, WSGI/ASGI
+│   ├── manage.py
+│   ├── nixpacks.toml
+│   └── requirements.txt
+├── frontend/                         # React + TypeScript + Vite client
+│   ├── public/
+│   ├── src/
+│   │   ├── audio/tone/               # Tone.js synth + playback helpers
+│   │   ├── components/
+│   │   │   ├── auth/                 # Login / register screens
+│   │   │   ├── layout/               # Shared layout / nav
+│   │   │   ├── projects/             # Project list, detail, piano roll
+│   │   │   └── tracks/               # Recording UI and track controls
+│   │   ├── contexts/
+│   │   ├── hooks/                    # useRecording, useNotePreview, etc.
+│   │   ├── services/                 # API client, audio analysis upload
+│   │   ├── utils/
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── index.html
+│   ├── package.json
+│   ├── tailwind.config.cjs
+│   ├── tsconfig.json
+│   └── vite.config.ts
+├── docker-compose.yaml               # Local Postgres service
+├── LICENSE
+└── README.md
+```
 
 ## Running locally
 
